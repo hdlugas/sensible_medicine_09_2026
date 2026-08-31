@@ -1,4 +1,4 @@
-# A smorgasbord of overlooked aspects of the opioid epidemic
+# JAMA fails to publish an honest assessment of opioid prescribing
 
 This repository contains instructions and R code for reproducing the figures presented in essay "A smorgasbord of overlooked aspects of the opioid epidemic" submitted to the Sensible Medicine Substack in April 2026.
 
@@ -15,6 +15,20 @@ Opioid-related Multiple Cause of Death (MCD) data was queried from the Centers f
 <br>
 
 <br>
+
+
+<p align="center">
+  <img src="figures/2023_age_distribution" width="700" height="700">
+  <br>
+  <em>Distribution of age among people who died from an opioid overdose in 2023.</em>
+</p>
+
+<br>
+
+<br>
+
+<br>
+
 
 
 <p align="center">
