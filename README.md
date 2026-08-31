@@ -18,7 +18,7 @@ Opioid-related Multiple Cause of Death (MCD) data was queried from the Centers f
 
 
 <p align="center">
-  <img src="figures/2023_age_distribution.png" width="700" height="700">
+  <img src="figures/2023_age_distribution.png" width="600" height="600">
   <br>
   <em>Distribution of age among people who died from an opioid overdose in 2023.</em>
 </p>
