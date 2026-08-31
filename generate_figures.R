@@ -3,6 +3,7 @@ library(ggplot2)
 library(ggpubr)
 library(stringr)
 library(flextable)
+library(dplyr)
 '%nin%' = Negate('%in%')
 
 
@@ -40,6 +41,27 @@ d = d[which(d$Multiple.Cause.of.death.Code %in% mcds.of.interest),]
 d = d[which(d$Year %in% 2012:2024),]
 d.agg = aggregate(cbind(Deaths,Population) ~ Year + Multiple.Cause.of.death.Code, data=d, FUN=sum)
 d.agg = d.agg[order(d.agg$Multiple.Cause.of.death.Code,d.agg$Year),]
+
+
+
+######### generate barplot showing distribution of age for people with opioid overdose death in 2023 #########
+d.2023 = d[which(d$Year==2023 & grepl("T",d$Multiple.Cause.of.death.Code)==T),]
+d.2023.agg = d.2023 %>%
+  group_by(age.group) %>%
+  summarise(Deaths=sum(Deaths)) %>%
+  mutate(percent=Deaths/sum(Deaths)*100)
+d.2023.agg$age.group = factor(d.2023.agg$age.group, levels=c("0-9","10-19","20-29","30-39","40-49","50-59","60-69","70-79","80-89","90+"))
+
+ggplot(d.2023.agg, aes(x = age.group, y = Deaths)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(percent,1),"%")), vjust=-0.5, size=4) +
+  labs(x="Age Group", y="Deaths", title="Deaths by Age Group, 2023") +
+  theme(panel.background=element_blank(),
+        panel.border=element_rect(fill=NA, color='black'),
+        plot.title=element_text(hjust=0.5, size=16),
+        axis.title=element_text(size=14),
+        axis.text=element_text(size=12))
+ggsave('opioid_analysis/substack_article/figures/2023_age_distribution.png', dpi=300)
 
 
 ##### include rows corresponding to any suicide (e.g. X60 through X84) #####
@@ -108,8 +130,8 @@ ggsave(filename='opioid_analysis/substack_article/figures/dist_of_types_of_opioi
 mod1 = lm(opioid.deaths.per.100k ~ n.retail.opioid.rxs.per.100.million, data=d.agg)
 mod2 = lm(opioid.deaths.per.100k ~ MME.retail.per.100.billion, data=d.agg)
 
-cor(d.agg$opioid.deaths.per.100k, d.agg$n.retail.opioid.rxs.per.100.million)
-cor(d.agg$opioid.deaths.per.100k, d.agg$MME.retail.per.100.billion)
+sprintf('%0.3f', cor(d.agg$opioid.deaths.per.100k, d.agg$n.retail.opioid.rxs.per.100.million))
+sprintf('%0.3f', cor(d.agg$opioid.deaths.per.100k, d.agg$MME.retail.per.100.billion))
 
 paste0('Effect size: ',sprintf('%0.3f',summary(mod1)$coefficients[2,1]),
        ' [',sprintf('%0.3f',confint(mod1)[2,1]),',',
